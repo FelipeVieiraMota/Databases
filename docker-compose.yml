@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 services:
   db:
     image: postgres:latest
@@ -9,4 +9,4 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /Users/felipevieiramota/workspace/Postgres:/var/lib/postgresql/data
+      - ./Postgres/volumes:/var/lib/postgresql/data
