@@ -31,3 +31,6 @@ docker exec -it mysqlContainer /bin/bash
 
 # Enter into the mysql inside the container
 mysql -uroot -pfelipevieiramota123
+
+# Kill all containers
+docker kill $(docker ps -q)
