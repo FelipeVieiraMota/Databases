@@ -1,36 +1,33 @@
-# #######################################################################################################
-#  General container's IP = 172.17.0.2                                                                  #
-# #######################################################################################################
-#   docker ps
-#   docker images list
-#   docker stop mysql-container
-#   docker inspect mysql-container 
-#   docker build -t mysql-image -f Dockerfile .
-#   docker run -d --rm -p 3306:3306 --name mysql-container mysql-image
-#   docker run --rm -p 3306:3306 --name mysql-container mysql-image
-#   docker exec -i mysql-container mysql -uroot -pfelipe < script.sql
-#   docker exec -it mysql-container /bin/bash
-#   docker run -d -v $(pwd)/data:/var/lib/mysql --rm -p 3306:3306 --name mysql-container mysql-image
-#   docker run -p 3306:3306 -v $(pwd)/data:/var/lib/mysql --rm --name mysql-container mysql-image
-# #######################################################################################################
-
 # Create a Docker build from scratch
-docker build -t mysql-image -f Dockerfile .
+docker build -t postgres -f Dockerfile .
 
 # Run
-docker run -d -v $(pwd)/db/data:/var/lib/mysql -p 3306:3306 --rm --name mysqlContainer mysql-image 
-
-# Exec a sql script inside the container automatically
-docker exec -i mysqlContainer mysql -uroot -pfelipevieiramota123 < DatabaseCreation.sql
+docker run -d \
+  --name postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=postgres \
+  -p 5432:5432 \
+  -v ./Postgres/volumes:/var/lib/postgresql/data \
+  postgres:latest
 
 # Inspect container details
-docker inspect mysqlContainer
+docker inspect postgres
 
 # Enter into the container
-docker exec -it mysqlContainer /bin/bash 
+docker exec -it postgres /bin/bash 
 
-# Enter into the mysql inside the container
-mysql -uroot -pfelipevieiramota123
+# Stop all running containers
+docker stop $(docker ps -q)
 
-# Kill all containers
-docker kill $(docker ps -q)
+# Remove all containers
+docker rm $(docker ps -a -q)
+
+# Remove all Docker images
+docker rmi $(docker images -q)
+
+# Optionally, force remove images if they are in use
+docker rmi -f $(docker images -q)
+
+# Clean up unused Docker resources
+docker system prune -a --volumes
